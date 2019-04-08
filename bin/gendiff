@@ -2,4 +2,4 @@
 <?php
 require_once __DIR__ . '/../src/autoload.php';
 
-\Differ\runCli();
+\Differ\Cli\run();

@@ -4,25 +4,6 @@ namespace Differ;
 
 use function Funct\Collection\union;
 
-function getHelp()
-{
-
-    $doc = <<<DOC
-Generate diff
-
-Usage:
-  gendiff (-h|--help)
-  gendiff [--format <fmt>] <firstFile> <secondFile>
-
-Options:
-  -h --help                     Show this screen
-  --format <fmt>                Report format [default: pretty]
-
-DOC;
-
-    return $doc;
-}
-
 const PREFIX_ADDED = '+ ';
 const PREFIX_REMOVED = '- ';
 const PREFIX_SAME = '';
@@ -93,7 +74,3 @@ function jsonValueToString($value)
     }
 }
 
-function runCli()
-{
-    $args = \Docopt::handle(getHelp());
-}

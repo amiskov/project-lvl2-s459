@@ -26,7 +26,8 @@
             "Differ\\Tests\\": "tests/"
         },
         "files": [
-            "src/Differ.php"
+            "src/Differ.php",
+            "src/Cli.php"
         ]
     },
     "require-dev": {
