@@ -73,4 +73,3 @@ function jsonValueToString($value)
         return $value;
     }
 }
-
