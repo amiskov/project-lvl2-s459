@@ -4,7 +4,6 @@
     "require": {
         "docopt/docopt": "^1.0"
     },
-    "minimum-stability": "dev",
     "scripts": {
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
