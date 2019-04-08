@@ -1,0 +1,27 @@
+{
+    "name": "amiskov/gendiff",
+    "description": "Shows difference between files. Hexlet 2nd level project.",
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "minimum-stability": "dev",
+    "scripts": {
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf",
+        "phpunit": "phpunit",
+        "test": "phpunit tests"
+    },
+    "authors": [
+        {
+            "name": "Andrey Miskov",
+            "email": "amiskov@gmail.com"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.4",
+        "phpunit/phpunit": "^8.2@dev"
+    }
+}
