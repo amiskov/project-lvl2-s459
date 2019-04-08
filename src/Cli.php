@@ -6,7 +6,6 @@ use function Differ\genDiff;
 
 function getHelp()
 {
-
     $doc = <<<DOC
 Generate diff
 
