@@ -20,6 +20,9 @@
     "bin": [
         "bin/gendiff"
     ],
+    "autoload": {
+        "psr-4": {"Hexlet\\": "src/"}
+    },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.4",
         "phpunit/phpunit": "^8.2@dev"
