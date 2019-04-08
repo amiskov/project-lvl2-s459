@@ -2,7 +2,9 @@
     "name": "amiskov/gendiff",
     "description": "Shows difference between files. Hexlet 2nd level project.",
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "funct/funct": "^1.5",
+        "ext-json": "*"
     },
     "scripts": {
         "phpcs": "phpcs",
@@ -20,10 +22,16 @@
         "bin/gendiff"
     ],
     "autoload": {
-        "psr-4": {"Hexlet\\": "src/"}
+        "psr-4": {
+            "Differ\\Tests\\": "tests/"
+        },
+        "files": [
+            "src/Differ.php"
+        ]
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.4",
-        "phpunit/phpunit": "^8.2@dev"
+        "phpunit/phpunit": "^8.2@dev",
+        "symfony/var-dumper": "^4.2"
     }
 }

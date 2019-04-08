@@ -2,5 +2,4 @@
 <?php
 require_once __DIR__ . '/../src/autoload.php';
 
-$genDiff = new Hexlet\GenDiff();
-$genDiff->run();
+\Differ\runCli();
