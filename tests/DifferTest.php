@@ -3,6 +3,7 @@
 namespace Differ\Tests;
 
 use function Differ\genDiff;
+use function Differ\Cli\getFileData;
 
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +15,12 @@ class DifferTest extends TestCase
         $afterFilePath = __DIR__ . '/cases/flat-json/after.json';
         $resultFilePath = __DIR__ . '/cases/flat-json/diff.txt';
 
-        $actual = genDiff($beforeFilePath, $afterFilePath);
         $expected = file_get_contents($resultFilePath);
+
+        $actual = genDiff(
+            getFileData($beforeFilePath),
+            getFileData($afterFilePath)
+        );
 
         $this->assertEquals($expected, $actual);
     }

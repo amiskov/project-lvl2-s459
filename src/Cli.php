@@ -25,5 +25,17 @@ DOC;
 function run()
 {
     $args = \Docopt::handle(getHelp());
-    echo genDiff($args['<firstFile>'], $args['<secondFile>']);
+
+    echo genDiff(
+        getFileData($args['<firstFile>']),
+        getFileData($args['<secondFile>'])
+    );
+}
+
+function getFileData(string $filePath)
+{
+    return json_decode(
+        file_get_contents($filePath),
+        true
+    );
 }

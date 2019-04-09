@@ -8,11 +8,8 @@ const PREFIX_ADDED = '+ ';
 const PREFIX_REMOVED = '- ';
 const PREFIX_SAME = '';
 
-function genDiff(string $beforePath, string $afterPath): string
+function genDiff(array $before, array $after): string
 {
-    $before = getFileData($beforePath);
-    $after = getFileData($afterPath);
-
     $allKeys = union(
         array_keys($before),
         array_keys($after)
@@ -48,14 +45,6 @@ function prepareDiffByKey($key, $before, $after)
 
     return makeRow(PREFIX_ADDED, $key, $after[$key])
         . makeRow(PREFIX_REMOVED, $key, $before[$key]);
-}
-
-function getFileData(string $filePath)
-{
-    return json_decode(
-        file_get_contents($filePath),
-        true
-    );
 }
 
 function makeRow($prefix, $key, $value)
