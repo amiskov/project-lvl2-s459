@@ -2,7 +2,7 @@
 
 namespace Differ\Tests;
 
-use function Differ\genDiff;
+use function Differ\Differ\genDiff;
 use function Differ\Cli\getFileData;
 
 use PHPUnit\Framework\TestCase;
