@@ -50,15 +50,15 @@ function prepareDiffByKey($key, $before, $after)
 function makeRow($prefix, $key, $value)
 {
     return "  {$prefix}{$key}: "
-        . jsonValueToString($value)
+        . valueToString($value)
         . PHP_EOL;
 }
 
-function jsonValueToString($value)
+function valueToString($value)
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
-    } else {
-        return $value;
     }
+
+    return $value;
 }
