@@ -8,17 +8,17 @@ const PREFIX_ADDED = '+ ';
 const PREFIX_REMOVED = '- ';
 const PREFIX_SAME = '';
 
-function genDiff(array $before, array $after): string
+function genDiff(array $configDataBefore, array $configDataAfter): string
 {
     $allKeys = union(
-        array_keys($before),
-        array_keys($after)
+        array_keys($configDataBefore),
+        array_keys($configDataAfter)
     );
 
     $diff = array_reduce(
         $allKeys,
-        function ($diffString, $key) use ($before, $after) {
-            return $diffString . prepareDiffByKey($key, $before, $after);
+        function ($diffString, $key) use ($configDataBefore, $configDataAfter) {
+            return $diffString . prepareDiffByKey($key, $configDataBefore, $configDataAfter);
         },
         ''
     );
