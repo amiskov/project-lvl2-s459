@@ -27,10 +27,10 @@ function run()
 {
     $args = \Docopt::handle(getHelp());
 
-    echo genDiff(
-        getFileData($args['<firstFile>']),
-        getFileData($args['<secondFile>'])
-    );
+    $configDataBefore = getFileData($args['<firstFile>']);
+    $configDataAfter = getFileData($args['<secondFile>']);
+
+    echo genDiff($configDataBefore, $configDataAfter);
 }
 
 function getFileData(string $filePath): array
