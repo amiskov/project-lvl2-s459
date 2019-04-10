@@ -28,6 +28,7 @@
         },
         "files": [
             "src/Differ.php",
+            "src/Parser.php",
             "src/Cli.php"
         ]
     },

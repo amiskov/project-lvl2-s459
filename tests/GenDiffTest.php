@@ -3,7 +3,7 @@
 namespace Differ\Tests;
 
 use function Differ\Differ\genDiff;
-use function Differ\Cli\getFileData;
+use function Differ\Parser\getFileData;
 
 use PHPUnit\Framework\TestCase;
 
