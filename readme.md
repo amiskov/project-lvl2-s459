@@ -4,6 +4,9 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/b8ef6f8760e0a778f9d3/maintainability)](https://codeclimate.com/github/amiskov/project-lvl2-s459/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b8ef6f8760e0a778f9d3/test_coverage)](https://codeclimate.com/github/amiskov/project-lvl2-s459/test_coverage)
 
+## Шаг 4: рекурсивное сравнение через AST
+[![asciicast](https://asciinema.org/a/oEwawASYdMG2dlgqBrDjVn5xC.svg)](https://asciinema.org/a/oEwawASYdMG2dlgqBrDjVn5xC)
+
 ## Шаг 3: сравнение плоского YAML-а
 [![asciicast](https://asciinema.org/a/lVvvgfhJJAoCYvERkcvGc5GuZ.svg)](https://asciinema.org/a/lVvvgfhJJAoCYvERkcvGc5GuZ)
 
