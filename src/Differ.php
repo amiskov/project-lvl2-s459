@@ -9,7 +9,7 @@ function genDiffInner(array $ast, $spacer = '  ')
         function ($diffString, $item) use ($spacer) {
             $prefix = makePrefix($item->type);
 
-            if (count($item->children)) {
+            if (!empty($item->children)) {
                 return $diffString
                     . $spacer
                     . $prefix
