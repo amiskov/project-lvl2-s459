@@ -2,7 +2,7 @@
 
 namespace Differ\Differ;
 
-function genDiffInner(array $ast, $spacer = '  ')
+function buildDiffBody(array $ast, $spacer = '  ')
 {
     $diff = array_reduce(
         $ast,
@@ -11,12 +11,9 @@ function genDiffInner(array $ast, $spacer = '  ')
 
             if (!empty($item->children)) {
                 return $diffString
-                    . $spacer
-                    . $prefix
-                    . $item->key . ':'
-                    . ' {' . PHP_EOL . genDiffInner($item->children, $spacer . '    ')
-                    . $spacer
-                    . '  }' . PHP_EOL;
+                    . $spacer . $prefix . $item->key . ':' . ' {' . PHP_EOL
+                    . buildDiffBody($item->children, $spacer . '    ')
+                    . $spacer . '  }' . PHP_EOL;
             }
 
             return $diffString
@@ -31,7 +28,7 @@ function genDiffInner(array $ast, $spacer = '  ')
 
 function genDiff($ast)
 {
-    return '{' . PHP_EOL . genDiffInner($ast) . '}' . PHP_EOL;
+    return '{' . PHP_EOL . buildDiffBody($ast) . '}' . PHP_EOL;
 }
 
 function makeRow($type, $key, $beforeValue, $afterValue, $spacer)
