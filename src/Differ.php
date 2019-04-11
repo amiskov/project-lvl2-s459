@@ -2,56 +2,62 @@
 
 namespace Differ\Differ;
 
-use function Funct\Collection\union;
-
-const PREFIX_ADDED = '+ ';
-const PREFIX_REMOVED = '- ';
-const PREFIX_SAME = '';
-
-function genDiff(array $configDataBefore, array $configDataAfter): string
+function buildDiffBody(array $ast, $spacer = '  ')
 {
-    $allKeys = union(
-        array_keys($configDataBefore),
-        array_keys($configDataAfter)
-    );
-
     $diff = array_reduce(
-        $allKeys,
-        function ($diffString, $key) use ($configDataBefore, $configDataAfter) {
-            return $diffString . prepareDiffByKey($key, $configDataBefore, $configDataAfter);
+        $ast,
+        function ($diffString, $item) use ($spacer) {
+            $prefix = makePrefix($item->type);
+
+            if (!empty($item->children)) {
+                return $diffString
+                    . $spacer . $prefix . $item->key . ':' . ' {' . PHP_EOL
+                    . buildDiffBody($item->children, $spacer . '    ')
+                    . $spacer . '  }' . PHP_EOL;
+            }
+
+            return $diffString
+                . $spacer
+                . makeRow($item->type, $item->key, $item->beforeValue, $item->afterValue, $spacer);
         },
         ''
     );
 
-    return '{' . PHP_EOL . $diff . '}' . PHP_EOL;
+    return $diff;
 }
 
-function prepareDiffByKey($key, $before, $after)
+function genDiff($ast)
 {
-    $keyWasBefore = array_key_exists($key, $before);
-    $keyExistsNow = array_key_exists($key, $after);
-
-    if ($keyWasBefore && !$keyExistsNow) {
-        return makeRow(PREFIX_REMOVED, $key, $before[$key]);
-    }
-
-    if ($keyExistsNow && !$keyWasBefore) {
-        return makeRow(PREFIX_ADDED, $key, $after[$key]);
-    }
-
-    if ($before[$key] === $after[$key]) {
-        return makeRow(PREFIX_SAME, $key, $before[$key]);
-    }
-
-    return makeRow(PREFIX_ADDED, $key, $after[$key])
-        . makeRow(PREFIX_REMOVED, $key, $before[$key]);
+    return '{' . PHP_EOL . buildDiffBody($ast) . '}' . PHP_EOL;
 }
 
-function makeRow($prefix, $key, $value)
+function makeRow($type, $key, $beforeValue, $afterValue, $spacer)
 {
-    return "  {$prefix}{$key}: "
-        . valueToString($value)
-        . PHP_EOL;
+    if ($type === 'changed') {
+        return makePrefix('added') . "{$key}: {$afterValue}" . PHP_EOL
+            . $spacer . makePrefix('removed') . "{$key}: {$beforeValue}" . PHP_EOL;
+    }
+
+    if ($type === 'added') {
+        return makePrefix($type) . $key . ': ' . valueToString($afterValue) . PHP_EOL;
+    }
+
+    if ($type === 'removed') {
+        return makePrefix($type) . $key . ': ' . valueToString($beforeValue) . PHP_EOL;
+    }
+
+    return makePrefix($type) . $key . ': ' . valueToString($beforeValue) . PHP_EOL;
+}
+
+function makePrefix($type)
+{
+    if ($type === 'added') {
+        return '+ ';
+    } elseif ($type === 'removed') {
+        return '- ';
+    }
+
+    return '  ';
 }
 
 function valueToString($value)
