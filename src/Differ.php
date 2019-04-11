@@ -2,8 +2,6 @@
 
 namespace Differ\Differ;
 
-use function Funct\Collection\union;
-
 function genDiffInner(array $ast, $spacer = '  ')
 {
     $diff = array_reduce(

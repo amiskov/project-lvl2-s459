@@ -13,7 +13,7 @@ class AstTest extends TestCase
     {
         $beforeFilePath = __DIR__ . '/cases/recursive/before.json';
         $afterFilePath = __DIR__ . '/cases/recursive/after.json';
-        $expected = file_get_contents( __DIR__ . '/cases/ast.json');
+        $expected = file_get_contents(__DIR__ . '/cases/ast.json');
 
         $beforeData = getFileData($beforeFilePath);
         $afterData = getFileData($afterFilePath);
@@ -29,7 +29,7 @@ class AstTest extends TestCase
     {
         $beforeFilePath = __DIR__ . '/cases/recursive/before.yaml';
         $afterFilePath = __DIR__ . '/cases/recursive/after.yaml';
-        $expected = file_get_contents( __DIR__ . '/cases/ast.json');
+        $expected = file_get_contents(__DIR__ . '/cases/ast.json');
 
         $beforeData = getFileData($beforeFilePath);
         $afterData = getFileData($afterFilePath);
