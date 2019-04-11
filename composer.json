@@ -29,6 +29,7 @@
         "files": [
             "src/Differ.php",
             "src/Parser.php",
+            "src/Ast.php",
             "src/Cli.php"
         ]
     },
