@@ -2,7 +2,6 @@
 
 namespace Differ\Cli;
 
-use function Differ\Ast\buildNodes;
 use function Differ\Differ\genDiff;
 use function Differ\Parser\parseYaml;
 use function Differ\Parser\parseJson;
@@ -33,9 +32,7 @@ function run()
         $configDataBefore = getFileData($args['<firstFile>']);
         $configDataAfter = getFileData($args['<secondFile>']);
 
-        $ast = buildNodes($configDataBefore, $configDataAfter);
-
-        echo genDiff($ast);
+        echo genDiff($configDataBefore, $configDataAfter);
     } catch (\Exception $e) {
         echo $e->getMessage();
     }

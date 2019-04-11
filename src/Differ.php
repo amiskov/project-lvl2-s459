@@ -2,6 +2,8 @@
 
 namespace Differ\Differ;
 
+use function Differ\Ast\buildNodes;
+
 function buildDiffBody(array $ast, $spacer = '  ')
 {
     $diff = array_reduce(
@@ -26,8 +28,10 @@ function buildDiffBody(array $ast, $spacer = '  ')
     return $diff;
 }
 
-function genDiff($ast)
+function genDiff($configDataBefore, $configDataAfter)
 {
+    $ast = buildNodes($configDataBefore, $configDataAfter);
+
     return '{' . PHP_EOL . buildDiffBody($ast) . '}' . PHP_EOL;
 }
 

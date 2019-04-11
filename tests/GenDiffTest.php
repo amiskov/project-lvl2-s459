@@ -2,7 +2,6 @@
 
 namespace Differ\Tests;
 
-use function Differ\Ast\buildNodes;
 use function Differ\Differ\genDiff;
 use function Differ\Cli\getFileData;
 
@@ -20,11 +19,9 @@ class GenDiffTest extends TestCase
             $configDataBefore = getFileData($beforeFilePath);
             $configDataAfter = getFileData($afterFilePath);
 
-            $ast = buildNodes($configDataBefore, $configDataAfter);
-
             return [
                 'expected' => file_get_contents($resultFilePath),
-                'actual' => genDiff($ast)
+                'actual' => genDiff($configDataBefore, $configDataAfter)
             ];
         } catch (\Exception $e) {
             echo $e->getMessage();
