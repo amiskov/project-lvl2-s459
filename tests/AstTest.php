@@ -3,41 +3,42 @@
 namespace Differ\Tests;
 
 use function Differ\Ast\buildNodes;
-use function Differ\Parser\getFileData;
+use function Differ\Cli\getFileData;
 
 use PHPUnit\Framework\TestCase;
 
 class AstTest extends TestCase
 {
+    public static function prepareTestData($casesFolderPath, $fileType)
+    {
+        $beforeFilePath = $casesFolderPath . 'before.' . $fileType;
+        $afterFilePath = $casesFolderPath . 'after.' . $fileType;
+
+        try {
+            $configDataBefore = getFileData($beforeFilePath);
+            $configDataAfter = getFileData($afterFilePath);
+
+            $ast = buildNodes($configDataBefore, $configDataAfter);
+
+            return [
+                'expected' => file_get_contents(__DIR__ . '/cases/ast.json'),
+                'actual' => json_encode($ast, JSON_PRETTY_PRINT) . PHP_EOL
+            ];
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return [];
+        }
+    }
+
     public function testJsonAst()
     {
-        $beforeFilePath = __DIR__ . '/cases/recursive/before.json';
-        $afterFilePath = __DIR__ . '/cases/recursive/after.json';
-        $expected = file_get_contents(__DIR__ . '/cases/ast.json');
-
-        $beforeData = getFileData($beforeFilePath);
-        $afterData = getFileData($afterFilePath);
-
-        $ast = buildNodes($beforeData, $afterData);
-
-        $actual = json_encode($ast, JSON_PRETTY_PRINT) . PHP_EOL;
-
-        $this->assertEquals($expected, $actual);
+        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'json');
+        $this->assertEquals($testData['expected'], $testData['actual']);
     }
 
     public function testYamlAst()
     {
-        $beforeFilePath = __DIR__ . '/cases/recursive/before.yaml';
-        $afterFilePath = __DIR__ . '/cases/recursive/after.yaml';
-        $expected = file_get_contents(__DIR__ . '/cases/ast.json');
-
-        $beforeData = getFileData($beforeFilePath);
-        $afterData = getFileData($afterFilePath);
-
-        $ast = buildNodes($beforeData, $afterData);
-
-        $actual = json_encode($ast, JSON_PRETTY_PRINT) . PHP_EOL;
-
-        $this->assertEquals($expected, $actual);
+        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml');
+        $this->assertEquals($testData['expected'], $testData['actual']);
     }
 }

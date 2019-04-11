@@ -4,7 +4,8 @@ namespace Differ\Cli;
 
 use function Differ\Ast\buildNodes;
 use function Differ\Differ\genDiff;
-use function Differ\Parser\getFileData;
+use function Differ\Parser\parseYaml;
+use function Differ\Parser\parseJson;
 
 function getHelp()
 {
@@ -28,13 +29,39 @@ function run()
 {
     $args = \Docopt::handle(getHelp());
 
-    $configDataBefore = getFileData($args['<firstFile>']);
-    $configDataAfter = getFileData($args['<secondFile>']);
+    try {
+        $configDataBefore = getFileData($args['<firstFile>']);
+        $configDataAfter = getFileData($args['<secondFile>']);
 
-    $ast = buildNodes(
-        $configDataBefore,
-        $configDataAfter
-    );
+        $ast = buildNodes($configDataBefore, $configDataAfter);
 
-    echo genDiff($ast);
+        echo genDiff($ast);
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+    }
+}
+
+function getFileType(string $path): string
+{
+    $pathParts = explode('.', $path);
+    return $pathParts[count($pathParts) - 1];
+}
+
+/**
+ * @param string $filePath
+ * @return array
+ * @throws \Exception
+ */
+function getFileData(string $filePath): array
+{
+    $rawData = file_get_contents($filePath);
+
+    switch (getFileType($filePath)) {
+        case 'json':
+            return parseJson($rawData);
+        case 'yaml':
+            return parseYaml($rawData);
+        default:
+            throw new \Exception('Unknown file format.');
+    }
 }
