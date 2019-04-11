@@ -2,6 +2,7 @@
 
 namespace Differ\Cli;
 
+use function Differ\Ast\buildNodes;
 use function Differ\Differ\genDiff;
 use function Differ\Parser\getFileData;
 
@@ -30,5 +31,10 @@ function run()
     $configDataBefore = getFileData($args['<firstFile>']);
     $configDataAfter = getFileData($args['<secondFile>']);
 
-    echo genDiff($configDataBefore, $configDataAfter);
+    $ast = buildNodes(
+        $configDataBefore,
+        $configDataAfter
+    );
+
+    echo genDiff($ast);
 }
