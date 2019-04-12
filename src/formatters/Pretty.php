@@ -23,15 +23,15 @@ function buildDiffBody(array $ast, $spacer = '  ')
                     . $spacer . '  }' . PHP_EOL;
             }
 
-            return $diffString
-                . $spacer
-                . makeRow(
-                    $item->type,
-                    $item->key,
-                    valueToString($item->beforeValue),
-                    valueToString($item->afterValue),
-                    $spacer
-                );
+            $rowOptions = [
+                $item->type,
+                $item->key,
+                valueToString($item->beforeValue),
+                valueToString($item->afterValue),
+                $spacer
+            ];
+
+            return $diffString . $spacer . makeRow(...$rowOptions);
         },
         ''
     );

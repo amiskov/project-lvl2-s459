@@ -14,25 +14,25 @@ function buildDiffBody(array $ast, $parents = [])
     $diff = array_reduce(
         $ast,
         function ($diffString, $item) use ($parents) {
-            if (!empty($item->children)) {
-                if ($item->type !== 'unchanged') {
-                    $complexRow = makeRow($item->type, $item->key, '', 'complex value', $parents);
-                }
+            $hasChildren = !empty($item->children);
+            $rowOptions = [
+                $item->type,
+                $item->key,
+                ($hasChildren ? 'complex value' : valueToString($item->beforeValue)),
+                ($hasChildren ? 'complex value' : valueToString($item->afterValue)),
+                $parents
+            ];
 
-                $complexRow = $complexRow ?? '';
-
-                return $diffString . $complexRow
-                    . buildDiffBody($item->children, array_merge($parents, [$item->key]));
+            if ($hasChildren) {
+                return $diffString
+                    . makeRow(...$rowOptions)
+                    . buildDiffBody(
+                        $item->children,
+                        array_merge($parents, [$item->key])
+                    );
             }
 
-            return $diffString
-                . makeRow(
-                    $item->type,
-                    $item->key,
-                    valueToString($item->beforeValue),
-                    valueToString($item->afterValue),
-                    $parents
-                );
+            return $diffString . makeRow(...$rowOptions);
         },
         ''
     );
