@@ -1,10 +1,8 @@
 <?php
 
-namespace Differ\Cli;
+namespace GenDiff\Cli;
 
-use function Differ\Differ\genDiff;
-use function Differ\Parser\parseYaml;
-use function Differ\Parser\parseJson;
+use function GenDiff\Differ\genDiff;
 
 function getHelp()
 {
@@ -28,37 +26,8 @@ function run()
 {
     $args = \Docopt::handle(getHelp());
 
-    try {
-        $configDataBefore = getFileData($args['<firstFile>']);
-        $configDataAfter = getFileData($args['<secondFile>']);
+    $pathToFile1 = $args['<firstFile>'];
+    $pathToFile2 = $args['<secondFile>'];
 
-        echo genDiff($configDataBefore, $configDataAfter);
-    } catch (\Exception $e) {
-        echo $e->getMessage();
-    }
-}
-
-function getFileType(string $path): string
-{
-    $pathParts = explode('.', $path);
-    return $pathParts[count($pathParts) - 1];
-}
-
-/**
- * @param string $filePath
- * @return array
- * @throws \Exception
- */
-function getFileData(string $filePath): array
-{
-    $rawData = file_get_contents($filePath);
-
-    switch (getFileType($filePath)) {
-        case 'json':
-            return parseJson($rawData);
-        case 'yaml':
-            return parseYaml($rawData);
-        default:
-            throw new \Exception('Unknown file format.');
-    }
+    echo genDiff($pathToFile1, $pathToFile2);
 }

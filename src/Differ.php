@@ -1,8 +1,10 @@
 <?php
 
-namespace Differ\Differ;
+namespace GenDiff\Differ;
 
-use function Differ\Ast\buildNodes;
+use function GenDiff\Ast\buildNodes;
+use function GenDiff\Parser\parseJson;
+use function GenDiff\Parser\parseYaml;
 
 function buildDiffBody(array $ast, $spacer = '  ')
 {
@@ -28,11 +30,18 @@ function buildDiffBody(array $ast, $spacer = '  ')
     return $diff;
 }
 
-function genDiff($configDataBefore, $configDataAfter)
+function genDiff($pathToFile1, $pathToFile2)
 {
-    $ast = buildNodes($configDataBefore, $configDataAfter);
+    try {
+        $configDataBefore = getFileData($pathToFile1);
+        $configDataAfter = getFileData($pathToFile2);
 
-    return '{' . PHP_EOL . buildDiffBody($ast) . '}' . PHP_EOL;
+        $ast = buildNodes($configDataBefore, $configDataAfter);
+
+        return '{' . PHP_EOL . buildDiffBody($ast) . '}' . PHP_EOL;
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
 }
 
 function makeRow($type, $key, $beforeValue, $afterValue, $spacer)
@@ -71,4 +80,29 @@ function valueToString($value)
     }
 
     return $value;
+}
+
+function getFileType(string $path): string
+{
+    $pathParts = explode('.', $path);
+    return $pathParts[count($pathParts) - 1];
+}
+
+/**
+ * @param string $filePath
+ * @return array
+ * @throws \Exception
+ */
+function getFileData(string $filePath): array
+{
+    $rawData = file_get_contents($filePath);
+
+    switch (getFileType($filePath)) {
+        case 'json':
+            return parseJson($rawData);
+        case 'yaml':
+            return parseYaml($rawData);
+        default:
+            throw new \Exception('Unknown file format.');
+    }
 }

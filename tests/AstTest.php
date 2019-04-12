@@ -1,9 +1,9 @@
 <?php
 
-namespace Differ\Tests;
+namespace GenDiff\Tests;
 
-use function Differ\Ast\buildNodes;
-use function Differ\Cli\getFileData;
+use function GenDiff\Ast\buildNodes;
+use function GenDiff\Differ\getFileData;
 
 use PHPUnit\Framework\TestCase;
 

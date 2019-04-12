@@ -24,7 +24,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Differ\\Tests\\": "tests/"
+            "GenDiff\\Tests\\": "tests/"
         },
         "files": [
             "src/Differ.php",

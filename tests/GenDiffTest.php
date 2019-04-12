@@ -1,9 +1,8 @@
 <?php
 
-namespace Differ\Tests;
+namespace GenDiff\Tests;
 
-use function Differ\Differ\genDiff;
-use function Differ\Cli\getFileData;
+use function GenDiff\Differ\genDiff;
 
 use PHPUnit\Framework\TestCase;
 
@@ -15,18 +14,10 @@ class GenDiffTest extends TestCase
         $afterFilePath = $casesFolderPath . 'after.' . $fileType;
         $resultFilePath = $casesFolderPath . 'diff.txt';
 
-        try {
-            $configDataBefore = getFileData($beforeFilePath);
-            $configDataAfter = getFileData($afterFilePath);
-
-            return [
-                'expected' => file_get_contents($resultFilePath),
-                'actual' => genDiff($configDataBefore, $configDataAfter)
-            ];
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-            return [];
-        }
+        return [
+            'expected' => file_get_contents($resultFilePath),
+            'actual' => genDiff($beforeFilePath, $afterFilePath)
+        ];
     }
 
     public function testFlatJson()
