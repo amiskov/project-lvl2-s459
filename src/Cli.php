@@ -28,6 +28,7 @@ function run()
 
     $pathToFile1 = $args['<firstFile>'];
     $pathToFile2 = $args['<secondFile>'];
+    $format = $args['--format'];
 
-    echo genDiff($pathToFile1, $pathToFile2);
+    echo genDiff($pathToFile1, $pathToFile2, $format);
 }

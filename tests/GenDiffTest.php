@@ -8,15 +8,15 @@ use PHPUnit\Framework\TestCase;
 
 class GenDiffTest extends TestCase
 {
-    public static function prepareTestData($casesFolderPath, $fileType)
+    public static function prepareTestData($casesFolderPath, $fileType, $format = 'pretty')
     {
         $beforeFilePath = $casesFolderPath . 'before.' . $fileType;
         $afterFilePath = $casesFolderPath . 'after.' . $fileType;
-        $resultFilePath = $casesFolderPath . 'diff.txt';
+        $resultFilePath = $casesFolderPath . 'diff-' . $format . '.txt';
 
         return [
             'expected' => file_get_contents($resultFilePath),
-            'actual' => genDiff($beforeFilePath, $afterFilePath)
+            'actual' => genDiff($beforeFilePath, $afterFilePath, $format)
         ];
     }
 
@@ -35,6 +35,12 @@ class GenDiffTest extends TestCase
     public function testRecursiveYaml()
     {
         $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml');
+        $this->assertEquals($testData['expected'], $testData['actual']);
+    }
+
+    public function testPlainFormat()
+    {
+        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml', 'plain');
         $this->assertEquals($testData['expected'], $testData['actual']);
     }
 }
