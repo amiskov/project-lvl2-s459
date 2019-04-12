@@ -27,8 +27,8 @@
             "GenDiff\\Tests\\": "tests/"
         },
         "files": [
-            "src/Formatters/Pretty.php",
-            "src/Formatters/Plain.php",
+            "src/formatters/Pretty.php",
+            "src/formatters/Plain.php",
             "src/Helpers.php",
             "src/Differ.php",
             "src/Parser.php",
