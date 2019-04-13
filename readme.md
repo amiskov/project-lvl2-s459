@@ -4,6 +4,9 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/b8ef6f8760e0a778f9d3/maintainability)](https://codeclimate.com/github/amiskov/project-lvl2-s459/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b8ef6f8760e0a778f9d3/test_coverage)](https://codeclimate.com/github/amiskov/project-lvl2-s459/test_coverage)
 
+## Шаг 6: json-формат
+[![asciicast](https://asciinema.org/a/wfMl4RJ5sl11c8l23qoCSL1K9.svg)](https://asciinema.org/a/wfMl4RJ5sl11c8l23qoCSL1K9)
+
 ## Шаг 5: plain-формат
 [![asciicast](https://asciinema.org/a/dsyCJIR5WzczUWCjp6rv0mcqy.svg)](https://asciinema.org/a/dsyCJIR5WzczUWCjp6rv0mcqy)
 
