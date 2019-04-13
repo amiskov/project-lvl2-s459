@@ -4,12 +4,12 @@ namespace GenDiff\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseContent(string $rawData, string $fileType): array
+function parseContent(string $rawData, string $dataType): array
 {
-    $parseFunction = __NAMESPACE__ . '\\parse' . ucfirst($fileType);
+    $parseFunction = __NAMESPACE__ . '\\parse' . ucfirst($dataType);
 
     if (!function_exists($parseFunction)) {
-        throw new \Exception('Unsupported file type: ' . $fileType);
+        throw new \Exception('Unsupported file type: ' . $dataType);
     }
 
     return $parseFunction($rawData);
