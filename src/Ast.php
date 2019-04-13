@@ -4,7 +4,7 @@ namespace GenDiff\Ast;
 
 use function Funct\Collection\union;
 
-function buildNodes($configBeforeData, $configAfterData)
+function buildAst($configBeforeData, $configAfterData)
 {
     $allKeys = union(
         array_keys($configBeforeData),
@@ -23,17 +23,17 @@ function buildNodes($configBeforeData, $configAfterData)
 
         // Compound values
         if ($isBeforeDataCompound && $isAfterDataCompound) {
-            return makeNode('unchanged', $key, '', '', buildNodes($configBeforeData[$key], $configAfterData[$key]));
+            return makeNode('unchanged', $key, '', '', buildAst($configBeforeData[$key], $configAfterData[$key]));
         }
 
         if ($isBeforeDataCompound && !$keyExistsNow) {
             $type = $isChildrenUnchanged ? 'unchanged' : 'removed';
-            return makeNode($type, $key, '', '', buildNodes($configBeforeData[$key], []));
+            return makeNode($type, $key, '', '', buildAst($configBeforeData[$key], []));
         }
 
         if ($isAfterDataCompound && !$keyWasBefore) {
             $type = $isChildrenUnchanged ? 'unchanged' : 'added';
-            return makeNode($type, $key, '', '', buildNodes([], $configAfterData[$key]));
+            return makeNode($type, $key, '', '', buildAst([], $configAfterData[$key]));
         }
 
 

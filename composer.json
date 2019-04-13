@@ -29,6 +29,7 @@
         "files": [
             "src/formatters/Pretty.php",
             "src/formatters/Plain.php",
+            "src/formatters/Json.php",
             "src/Helpers.php",
             "src/Differ.php",
             "src/Parser.php",
