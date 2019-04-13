@@ -53,15 +53,15 @@ function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
             $outerIndent = times(' ', $fullSpacesQty);
             $innerIndent = $outerIndent . times(' ', SPACES_IN_INDENT);
 
-            $row = array_reduce(
+            $innerRows = array_reduce(
                 array_keys($value),
-                function ($row, $key) use ($signedIndent, $value, $innerIndent) {
-                    return $row . "{$innerIndent}{$key}: {$value[$key]}";
+                function ($rows, $key) use ($signedIndent, $value, $innerIndent) {
+                    return $rows . "{$innerIndent}{$key}: {$value[$key]}";
                 },
                 ''
             );
 
-            return "{$signedIndent}{$key}: {\n{$row}\n{$outerIndent}}";
+            return "{$signedIndent}{$key}: {\n{$innerRows}\n{$outerIndent}}";
         }
 
         return "{$signedIndent}{$key}: {$value}";
