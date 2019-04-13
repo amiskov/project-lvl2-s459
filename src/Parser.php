@@ -6,13 +6,13 @@ use Symfony\Component\Yaml\Yaml;
 
 function parseContent(string $rawData, string $fileType): array
 {
-    $parserFunction = __NAMESPACE__ . '\\parse' . ucfirst($fileType);
+    $parseFunction = __NAMESPACE__ . '\\parse' . ucfirst($fileType);
 
-    if (!function_exists($parserFunction)) {
+    if (!function_exists($parseFunction)) {
         throw new \Exception('Unsupported file type: ' . $fileType);
     }
 
-    return $parserFunction($rawData);
+    return $parseFunction($rawData);
 }
 
 function parseJson(string $rawData): array
