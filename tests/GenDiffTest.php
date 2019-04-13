@@ -52,7 +52,8 @@ class GenDiffTest extends TestCase
 
     public function testJsonFormat()
     {
-        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml', 'json');
+        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'json', 'json');
+        echo $testData['actual'];
         $this->assertEquals($testData['expected'], $testData['actual']);
     }
 }

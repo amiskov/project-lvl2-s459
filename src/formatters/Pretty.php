@@ -46,8 +46,24 @@ function buildDiffBody(array $ast, $depth = 1)
 function makeRow($type, $key, $beforeValue, $afterValue, $depth)
 {
     $rowMaker = function ($value, $sign) use ($key, $depth) {
-        $fullIndent = $depth * SPACES_IN_INDENT;
-        $signedIndent = padLeft("{$sign} ", $fullIndent);
+        $fullSpacesQty = $depth * SPACES_IN_INDENT;
+        $signedIndent = padLeft("{$sign} ", $fullSpacesQty);
+
+        if (is_array($value)) {
+            $outerIndent = times(' ', $fullSpacesQty);
+            $innerIndent = $outerIndent . times(' ', SPACES_IN_INDENT);
+
+            $row = array_reduce(
+                array_keys($value),
+                function ($row, $key) use ($signedIndent, $value, $innerIndent) {
+                    return $row . "{$innerIndent}{$key}: {$value[$key]}";
+                },
+                ''
+            );
+
+            return "{$signedIndent}{$key}: {\n{$row}\n{$outerIndent}}";
+        }
+
         return "{$signedIndent}{$key}: {$value}";
     };
 

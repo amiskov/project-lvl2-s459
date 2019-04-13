@@ -29,17 +29,11 @@
             {
                 "type": "removed",
                 "key": "setting6",
-                "beforeValue": "",
+                "beforeValue": {
+                    "key": "value"
+                },
                 "afterValue": "",
-                "children": [
-                    {
-                        "type": "unchanged",
-                        "key": "key",
-                        "beforeValue": "value",
-                        "afterValue": "value",
-                        "children": []
-                    }
-                ]
+                "children": []
             },
             {
                 "type": "added",
@@ -52,16 +46,10 @@
                 "type": "added",
                 "key": "setting5",
                 "beforeValue": "",
-                "afterValue": "",
-                "children": [
-                    {
-                        "type": "unchanged",
-                        "key": "key5",
-                        "beforeValue": "value5",
-                        "afterValue": "value5",
-                        "children": []
-                    }
-                ]
+                "afterValue": {
+                    "key5": "value5"
+                },
+                "children": []
             }
         ]
     },
@@ -90,31 +78,19 @@
     {
         "type": "removed",
         "key": "group2",
-        "beforeValue": "",
+        "beforeValue": {
+            "abc": "12345"
+        },
         "afterValue": "",
-        "children": [
-            {
-                "type": "unchanged",
-                "key": "abc",
-                "beforeValue": "12345",
-                "afterValue": "12345",
-                "children": []
-            }
-        ]
+        "children": []
     },
     {
         "type": "added",
         "key": "group3",
         "beforeValue": "",
-        "afterValue": "",
-        "children": [
-            {
-                "type": "unchanged",
-                "key": "fee",
-                "beforeValue": "100500",
-                "afterValue": "100500",
-                "children": []
-            }
-        ]
+        "afterValue": {
+            "fee": "100500"
+        },
+        "children": []
     }
 ]

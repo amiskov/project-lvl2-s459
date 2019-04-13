@@ -2,6 +2,7 @@
 
 namespace GenDiff\Formatters\Plain;
 
+use function Funct\Strings\isAlpha;
 use function GenDiff\Helpers\valueToString;
 
 function buildDiff($ast)
@@ -14,16 +15,17 @@ function buildDiffBody(array $ast, $parents = [])
     $diff = array_reduce(
         $ast,
         function ($diffString, $item) use ($parents) {
-            $hasChildren = !empty($item->children);
+            $isComples = !empty($item->children) || is_array($item->beforeValue) || is_array($item->afterValue);
+
             $rowOptions = [
                 $item->type,
                 $item->key,
-                ($hasChildren ? 'complex value' : valueToString($item->beforeValue)),
-                ($hasChildren ? 'complex value' : valueToString($item->afterValue)),
+                ($isComples ? 'complex value' : valueToString($item->beforeValue)),
+                ($isComples ? 'complex value' : valueToString($item->afterValue)),
                 $parents
             ];
 
-            if ($hasChildren) {
+            if ($isComples) {
                 return $diffString
                     . makeRow(...$rowOptions)
                     . buildDiffBody(
