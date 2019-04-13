@@ -21,8 +21,8 @@ function buildDiffBody(array $ast, $depth = 1)
             $rowOptions = [
                 $item->type,
                 $item->key,
-                valueToString($item->beforeValue),
-                valueToString($item->afterValue),
+                valueToString($item->valueBefore),
+                valueToString($item->valueAfter),
                 $depth
             ];
 
@@ -43,7 +43,7 @@ function buildDiffBody(array $ast, $depth = 1)
     return $diff;
 }
 
-function makeRow($type, $key, $beforeValue, $afterValue, $depth)
+function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
 {
     $rowMaker = function ($value, $sign) use ($key, $depth) {
         $fullSpacesQty = $depth * SPACES_IN_INDENT;
@@ -69,14 +69,14 @@ function makeRow($type, $key, $beforeValue, $afterValue, $depth)
 
     switch ($type) {
         case 'unchanged':
-            return $rowMaker($beforeValue, '');
+            return $rowMaker($valueBefore, '');
         case 'added':
-            return $rowMaker($afterValue, '+');
+            return $rowMaker($valueAfter, '+');
         case 'removed':
-            return $rowMaker($beforeValue, '-');
+            return $rowMaker($valueBefore, '-');
         case 'changed':
-            return $rowMaker($afterValue, '+') . PHP_EOL
-                . $rowMaker($beforeValue, '-');
+            return $rowMaker($valueAfter, '+') . PHP_EOL
+                . $rowMaker($valueBefore, '-');
         default:
             return '';
     }

@@ -2,51 +2,51 @@
     {
         "type": "unchanged",
         "key": "common",
-        "beforeValue": "",
-        "afterValue": "",
+        "valueBefore": "",
+        "valueAfter": "",
         "children": [
             {
                 "type": "unchanged",
                 "key": "setting1",
-                "beforeValue": "Value 1",
-                "afterValue": "Value 1",
+                "valueBefore": "Value 1",
+                "valueAfter": "Value 1",
                 "children": []
             },
             {
                 "type": "removed",
                 "key": "setting2",
-                "beforeValue": "200",
-                "afterValue": "",
+                "valueBefore": "200",
+                "valueAfter": "",
                 "children": []
             },
             {
                 "type": "unchanged",
                 "key": "setting3",
-                "beforeValue": true,
-                "afterValue": true,
+                "valueBefore": true,
+                "valueAfter": true,
                 "children": []
             },
             {
                 "type": "removed",
                 "key": "setting6",
-                "beforeValue": {
+                "valueBefore": {
                     "key": "value"
                 },
-                "afterValue": "",
+                "valueAfter": "",
                 "children": []
             },
             {
                 "type": "added",
                 "key": "setting4",
-                "beforeValue": "",
-                "afterValue": "blah blah",
+                "valueBefore": "",
+                "valueAfter": "blah blah",
                 "children": []
             },
             {
                 "type": "added",
                 "key": "setting5",
-                "beforeValue": "",
-                "afterValue": {
+                "valueBefore": "",
+                "valueAfter": {
                     "key5": "value5"
                 },
                 "children": []
@@ -56,21 +56,21 @@
     {
         "type": "unchanged",
         "key": "group1",
-        "beforeValue": "",
-        "afterValue": "",
+        "valueBefore": "",
+        "valueAfter": "",
         "children": [
             {
                 "type": "changed",
                 "key": "baz",
-                "beforeValue": "bas",
-                "afterValue": "bars",
+                "valueBefore": "bas",
+                "valueAfter": "bars",
                 "children": []
             },
             {
                 "type": "unchanged",
                 "key": "foo",
-                "beforeValue": "bar",
-                "afterValue": "bar",
+                "valueBefore": "bar",
+                "valueAfter": "bar",
                 "children": []
             }
         ]
@@ -78,17 +78,17 @@
     {
         "type": "removed",
         "key": "group2",
-        "beforeValue": {
+        "valueBefore": {
             "abc": "12345"
         },
-        "afterValue": "",
+        "valueAfter": "",
         "children": []
     },
     {
         "type": "added",
         "key": "group3",
-        "beforeValue": "",
-        "afterValue": {
+        "valueBefore": "",
+        "valueAfter": {
             "fee": "100500"
         },
         "children": []

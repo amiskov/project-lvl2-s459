@@ -18,10 +18,10 @@ function buildAst($dataBefore, $dataAfter)
     return array_values($ast);
 }
 
-function makeNode($key, $beforeData, $afterData)
+function makeNode($key, $dataBefore, $dataAfter)
 {
-    $valueBefore = $beforeData[$key] ?? '';
-    $valueAfter = $afterData[$key] ?? '';
+    $valueBefore = $dataBefore[$key] ?? '';
+    $valueAfter = $dataAfter[$key] ?? '';
 
     $nodeMaker = function ($type, $children = []) use ($valueBefore, $valueAfter, $key) {
         $hasChildren = !empty($children);
@@ -29,18 +29,18 @@ function makeNode($key, $beforeData, $afterData)
         $node = new \stdClass();
         $node->type = $type;
         $node->key = $key;
-        $node->beforeValue = $hasChildren ? '' : $valueBefore;
-        $node->afterValue = $hasChildren ? '' : $valueAfter;
+        $node->valueBefore = $hasChildren ? '' : $valueBefore;
+        $node->valueAfter = $hasChildren ? '' : $valueAfter;
         $node->children = $children;
 
         return $node;
     };
 
-    if (!array_key_exists($key, $beforeData)) {
+    if (!array_key_exists($key, $dataBefore)) {
         return $nodeMaker('added');
     }
 
-    if (!array_key_exists($key, $afterData)) {
+    if (!array_key_exists($key, $dataAfter)) {
         return $nodeMaker('removed');
     }
 
