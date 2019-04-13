@@ -30,6 +30,6 @@ function getFormattedDiff($content, $format)
 function getData($filePath)
 {
     $fileType = pathinfo($filePath, PATHINFO_EXTENSION);
-    $rawContentBefore = file_get_contents($filePath);
-    return parseContent($rawContentBefore, $fileType);
+    $rawData = file_get_contents($filePath);
+    return parseContent($rawData, $fileType);
 }
