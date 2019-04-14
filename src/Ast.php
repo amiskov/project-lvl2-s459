@@ -23,34 +23,34 @@ function makeNode($key, $dataBefore, $dataAfter)
     $valueBefore = $dataBefore[$key] ?? '';
     $valueAfter = $dataAfter[$key] ?? '';
 
-    $nodeMaker = function ($type, $children = []) use ($valueBefore, $valueAfter, $key) {
-        $hasChildren = !empty($children);
-
-        $node = new \stdClass();
-        $node->type = $type;
-        $node->key = $key;
-        $node->valueBefore = $hasChildren ? '' : $valueBefore;
-        $node->valueAfter = $hasChildren ? '' : $valueAfter;
-        $node->children = $children;
-
-        return $node;
-    };
-
     if (!array_key_exists($key, $dataBefore)) {
-        return $nodeMaker('added');
+        return nodeMaker('added', $key, $valueBefore, $valueAfter);
     }
 
     if (!array_key_exists($key, $dataAfter)) {
-        return $nodeMaker('removed');
+        return nodeMaker('removed', $key, $valueBefore, $valueAfter);
     }
 
     if (is_array($valueBefore) && is_array($valueBefore)) {
-        return $nodeMaker('unchanged', buildAst($valueBefore, $valueAfter));
+        return nodeMaker('nested', $key, '', '', buildAst($valueBefore, $valueAfter));
     }
 
     if ($valueBefore === $valueAfter) {
-        return $nodeMaker('unchanged');
+        return nodeMaker('unchanged', $key, $valueBefore, $valueAfter);
     }
 
-    return $nodeMaker('changed');
+    return nodeMaker('changed', $key, $valueBefore, $valueAfter);
+}
+
+function nodeMaker($type, $key, $valueBefore, $valueAfter, $children = [])
+{
+    $node = new \stdClass();
+
+    $node->type = $type;
+    $node->key = $key;
+    $node->valueBefore = $valueBefore;
+    $node->valueAfter = $valueAfter;
+    $node->children = $children;
+
+    return $node;
 }

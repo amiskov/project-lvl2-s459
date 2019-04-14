@@ -18,24 +18,7 @@ function buildDiffBody(array $ast, $depth = 1)
     $diff = array_reduce(
         $ast,
         function ($diffString, $item) use ($depth) {
-            $rowOptions = [
-                $item->type,
-                $item->key,
-                valueToString($item->valueBefore),
-                valueToString($item->valueAfter),
-                $depth
-            ];
-
-            $hasChildren = !empty($item->children);
-
-            if ($hasChildren) {
-                return $diffString
-                    . openParentBlock($rowOptions)
-                    . buildDiffBody($item->children, $depth + 1)
-                    . closeParentBlock($depth);
-            }
-
-            return $diffString . makeRow(...$rowOptions) . PHP_EOL;
+            return $diffString . makeRow($item, $depth) . PHP_EOL;
         },
         ''
     );
@@ -43,10 +26,17 @@ function buildDiffBody(array $ast, $depth = 1)
     return $diff;
 }
 
-function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
+function makeRow($item, $depth)
 {
-    $rowMaker = function ($value, $sign) use ($key, $depth) {
-        $fullSpacesQty = $depth * SPACES_IN_INDENT;
+    $type = $item->type;
+    $key = $item->key;
+    $valueBefore = $item->valueBefore;
+    $valueAfter = $item->valueAfter;
+    $children = $item->children;
+
+    $fullSpacesQty = $depth * SPACES_IN_INDENT;
+
+    $rowMaker = function ($value, $sign) use ($key, $depth, $fullSpacesQty) {
         $signedIndent = padLeft("{$sign} ", $fullSpacesQty);
 
         if (is_array($value)) {
@@ -56,7 +46,7 @@ function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
             $innerRows = array_reduce(
                 array_keys($value),
                 function ($rows, $key) use ($signedIndent, $value, $innerIndent) {
-                    return $rows . "{$innerIndent}{$key}: {$value[$key]}";
+                    return $rows . "{$innerIndent}{$key}: " . valueToString($value[$key]);
                 },
                 ''
             );
@@ -64,10 +54,14 @@ function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
             return "{$signedIndent}{$key}: {\n{$innerRows}\n{$outerIndent}}";
         }
 
-        return "{$signedIndent}{$key}: {$value}";
+        return "{$signedIndent}{$key}: " . valueToString($value);
     };
 
     switch ($type) {
+        case 'nested':
+            return $rowMaker($valueBefore, '') . '{' . PHP_EOL
+                . buildDiffBody($children, $depth + 1)
+                . times(' ', $depth * SPACES_IN_INDENT) . '}';
         case 'unchanged':
             return $rowMaker($valueBefore, '');
         case 'added':
@@ -78,16 +72,6 @@ function makeRow($type, $key, $valueBefore, $valueAfter, $depth)
             return $rowMaker($valueAfter, '+') . PHP_EOL
                 . $rowMaker($valueBefore, '-');
         default:
-            return '';
+            throw new \Exception('Unknown type in AST: ' . $type);
     }
-}
-
-function openParentBlock($rowOptions)
-{
-    return makeRow(...$rowOptions) . '{' . PHP_EOL;
-}
-
-function closeParentBlock($depth)
-{
-    return times(' ', $depth * SPACES_IN_INDENT) . '}' . PHP_EOL;
 }

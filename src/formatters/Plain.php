@@ -52,8 +52,12 @@ function makeRow($type, $key, $valueBefore, $valueAfter, $parents = [])
             return "Property '{$fullKeyDepth}' was added with value: '{$valueAfter}'" . PHP_EOL;
         case 'removed':
             return "Property '{$fullKeyDepth}' was removed" . PHP_EOL;
-        default:
+        case 'unchanged':
             return '';
+        case 'nested':
+            return '';
+        default:
+            throw new \Exception('Unknown type in AST: ' . $type);
     }
 }
 

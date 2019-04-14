@@ -30,5 +30,9 @@ function run()
     $pathToFile2 = $args['<secondFile>'];
     $format = $args['--format'];
 
-    echo genDiff($pathToFile1, $pathToFile2, $format);
+    try {
+        echo genDiff($pathToFile1, $pathToFile2, $format);
+    } catch (\Exception $e) {
+        echo $e->getMessage() . PHP_EOL;
+    }
 }

@@ -1,6 +1,6 @@
 [
     {
-        "type": "unchanged",
+        "type": "nested",
         "key": "common",
         "valueBefore": "",
         "valueAfter": "",
@@ -54,7 +54,7 @@
         ]
     },
     {
-        "type": "unchanged",
+        "type": "nested",
         "key": "group1",
         "valueBefore": "",
         "valueAfter": "",
