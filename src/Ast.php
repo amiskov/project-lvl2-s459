@@ -9,124 +9,94 @@ function getNodeTypes()
     return [
         [
             'type' => 'added',
-            'condition' => function ($key, $dataBefore, $dataAfter) {
+            'checker' => function ($key, $dataBefore) {
                 return !array_key_exists($key, $dataBefore);
             },
-            'create' => function ($value) {
-                return $value;
+            'creator' => function ($type, $key, $valueBefore, $valueAfter) {
+                return makeNode($type, $key, $valueBefore, $valueAfter);
             }
         ],
         [
             'type' => 'removed',
-            'condition' => function ($key, $dataBefore, $dataAfter) {
+            'checker' => function ($key, $dataBefore, $dataAfter) {
                 return !array_key_exists($key, $dataAfter);
             },
-            'create' => function ($valueBefore) {
-                return $valueBefore;
+            'creator' => function ($type, $key, $valueBefore) {
+                return makeNode($type, $key, $valueBefore);
             }
         ],
         [
             'type' => 'nested',
-            'condition' => function ($key, $dataBefore, $dataAfter) {
+            'checker' => function ($key, $dataBefore, $dataAfter) {
                 return array_key_exists($key, $dataBefore) && array_key_exists($key, $dataAfter)
                     && is_array($dataBefore[$key]) && is_array($dataAfter[$key]);
             },
-            'create' => function ($valueBefore, $valueAfter, $recursiveFn) {
-                return $recursiveFn($valueBefore, $valueAfter);
+            'creator' => function ($type, $key, $valueBefore, $valueAfter, $astBuilder) {
+                return makeNode($type, $key, '', '', $astBuilder($valueBefore, $valueAfter));
             }
         ],
         [
             'type' => 'unchanged',
-            'condition' => function ($key, $dataBefore, $dataAfter) {
+            'checker' => function ($key, $dataBefore, $dataAfter) {
                 return array_key_exists($key, $dataBefore) && array_key_exists($key, $dataAfter)
                     && $dataBefore[$key] === $dataAfter[$key];
             },
-            'create' => function ($beforeValue) {
-                return $beforeValue;
+            'creator' => function ($type, $key, $beforeValue, $afterValue) {
+                return makeNode($type, $key, $beforeValue, $afterValue);
             }
         ],
         [
             'type' => 'changed',
-            'condition' => function ($key, $dataBefore, $dataAfter) {
+            'checker' => function ($key, $dataBefore, $dataAfter) {
                 return array_key_exists($key, $dataBefore) && array_key_exists($key, $dataAfter)
                     && $dataBefore[$key] !== $dataAfter[$key];
             },
-            'create' => function ($beforeValue, $afterValue) {
-                return [
-                    'old' => $beforeValue,
-                    'new' => $afterValue
-                ];
+            'creator' => function ($type, $key, $beforeValue, $afterValue) {
+                return makeNode($type, $key, $beforeValue, $afterValue);
             }
-        ],
+        ]
     ];
 }
 
 function buildAst($dataBefore, $dataAfter)
 {
-    $allKeys = union(
-        array_keys($dataBefore),
-        array_keys($dataAfter)
-    );
-
     $nodeTypes = getNodeTypes();
 
-    $ast = array_map(function ($key) use ($dataBefore, $dataAfter, $nodeTypes) {
-        $currentTypeElement = current(array_filter($nodeTypes, function ($nodeType) use ($key, $nodeTypes, $dataBefore, $dataAfter) {
-            $typeChecker = $nodeType['condition'];
-            return $typeChecker($key, $dataBefore, $dataAfter);
-        }));
+    $astBuilder = function ($dataBefore, $dataAfter) use (&$astBuilder, $nodeTypes) {
+        $allKeys = union(
+            array_keys($dataBefore),
+            array_keys($dataAfter)
+        );
 
-        $valueBefore = $dataBefore[$key] ?? '';
-        $valueAfter = $dataAfter[$key] ?? '';
+        $ast = array_map(function ($key) use ($dataBefore, $dataAfter, $nodeTypes, $astBuilder) {
+            $typeElement = current(
+                array_filter(
+                    $nodeTypes,
+                    function ($nodeType) use ($key, $dataBefore, $dataAfter) {
+                        $checkType = $nodeType['checker'];
+                        return $checkType($key, $dataBefore, $dataAfter);
+                    }
+                )
+            );
 
+            $createNode = $typeElement['creator'];
 
-        $type = $currentTypeElement['type'];
-        $value = $currentTypeElement['create']($valueBefore, $valueAfter, buildAst($valueBefore, $valueAfter));
+            return $createNode(
+                $typeElement['type'],
+                $key,
+                $dataBefore[$key] ?? '',
+                $dataAfter[$key] ?? '',
+                $astBuilder
+            );
+        }, $allKeys);
 
-        $node = new \stdClass();
+        return array_values($ast);
+    };
 
-        $node->type = $type;
-        $node->key = $key;
-        $node->valueBefore = $valueBefore;
-        $node->valueAfter = $valueAfter;
-//        $node->children = $children;
-
-        return $node;
-    }, $allKeys);
-
-    dd($ast);
-//    $ast = array_map(function ($key) use ($dataBefore, $dataAfter) {
-//        return makeNode($key, $dataBefore, $dataAfter);
-//    }, $allKeys);
-
-    return array_values($ast);
+    return $astBuilder($dataBefore, $dataAfter);
 }
 
-function makeNode($key, $dataBefore, $dataAfter)
-{
-    $valueBefore = $dataBefore[$key] ?? '';
-    $valueAfter = $dataAfter[$key] ?? '';
-
-    if (!array_key_exists($key, $dataBefore)) {
-        return nodeMaker('added', $key, $valueBefore, $valueAfter);
-    }
-
-    if (!array_key_exists($key, $dataAfter)) {
-        return nodeMaker('removed', $key, $valueBefore, $valueAfter);
-    }
-
-    if (is_array($valueBefore) && is_array($valueBefore)) {
-        return nodeMaker('nested', $key, '', '', buildAst($valueBefore, $valueAfter));
-    }
-
-    if ($valueBefore === $valueAfter) {
-        return nodeMaker('unchanged', $key, $valueBefore, $valueAfter);
-    }
-
-    return nodeMaker('changed', $key, $valueBefore, $valueAfter);
-}
-
-function nodeMaker($type, $key, $valueBefore, $valueAfter, $children = [])
+function makeNode($type, $key, $valueBefore = '', $valueAfter = '', $children = [])
 {
     $node = new \stdClass();
 
