@@ -46,8 +46,11 @@ class GenDiffTest extends TestCase
 
     public function testPlainFormat()
     {
-        $testData = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml', 'plain');
-        $this->assertEquals($testData['expected'], $testData['actual']);
+        $testDataJson = self::prepareTestData(__DIR__ . '/cases/recursive/', 'json', 'plain');
+        $testDataYaml = self::prepareTestData(__DIR__ . '/cases/recursive/', 'yaml', 'plain');
+
+        $this->assertEquals($testDataJson['expected'], $testDataJson['actual']);
+        $this->assertEquals($testDataYaml['expected'], $testDataJson['actual']);
     }
 
     public function testJsonFormat()
