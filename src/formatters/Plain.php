@@ -2,38 +2,19 @@
 
 namespace GenDiff\Formatters\Plain;
 
-use function GenDiff\Helpers\valueToString;
+use function GenDiff\Helpers\boolToString;
 
 function buildDiff($ast)
 {
     return buildDiffBody($ast);
 }
 
-function buildDiffBody(array $ast, $parents = [])
+function buildDiffBody(array $ast, $parentKeys = [])
 {
     $diff = array_reduce(
         $ast,
-        function ($diffString, $item) use ($parents) {
-            $isValueComplex = !empty($item->children) || is_array($item->valueBefore) || is_array($item->valueAfter);
-
-            $rowOptions = [
-                $item->type,
-                $item->key,
-                ($isValueComplex ? 'complex value' : valueToString($item->valueBefore)),
-                ($isValueComplex ? 'complex value' : valueToString($item->valueAfter)),
-                $parents
-            ];
-
-            if ($isValueComplex) {
-                return $diffString
-                    . makeRow(...$rowOptions)
-                    . buildDiffBody(
-                        $item->children,
-                        array_merge($parents, [$item->key])
-                    );
-            }
-
-            return $diffString . makeRow(...$rowOptions);
+        function ($diffString, $astNode) use ($parentKeys) {
+            return $diffString . makeDiffRow($astNode, $parentKeys);
         },
         ''
     );
@@ -41,31 +22,44 @@ function buildDiffBody(array $ast, $parents = [])
     return $diff;
 }
 
-function makeRow($type, $key, $valueBefore, $valueAfter, $parents = [])
+function makeDiffRow(object $astNode, array $parentKeys = []): string
 {
-    $fullKeyDepth = getFullKeyDepth($parents, $key);
+    $type = $astNode->type;
+    $fullKeyPath = getFullKeyPath($parentKeys, $astNode->key);
+    $valueBefore = valueToString($astNode->valueBefore);
+    $valueAfter = valueToString($astNode->valueAfter);
+    $childNodes = $astNode->children;
 
     switch ($type) {
-        case 'changed':
-            return "Property '{$fullKeyDepth}' was changed. From '{$valueBefore}' to '{$valueAfter}'" . PHP_EOL;
-        case 'added':
-            return "Property '{$fullKeyDepth}' was added with value: '{$valueAfter}'" . PHP_EOL;
-        case 'removed':
-            return "Property '{$fullKeyDepth}' was removed" . PHP_EOL;
         case 'unchanged':
             return '';
+        case 'changed':
+            return "Property '{$fullKeyPath}' was changed. From '{$valueBefore}' to '{$valueAfter}'" . PHP_EOL;
+        case 'added':
+            return "Property '{$fullKeyPath}' was added with value: '{$valueAfter}'" . PHP_EOL;
+        case 'removed':
+            return "Property '{$fullKeyPath}' was removed" . PHP_EOL;
         case 'nested':
-            return '';
+            return buildDiffBody(
+                $childNodes,
+                array_merge($parentKeys, [$fullKeyPath])
+            );
         default:
             throw new \Exception('Unknown type in AST: ' . $type);
     }
 }
 
-function getFullKeyDepth(array $parents, string $currentKey): string
+function getFullKeyPath(array $parents, string $currentKey): string
 {
     if (empty($parents)) {
         return $currentKey;
     }
 
     return implode('.', $parents) . '.' . $currentKey;
+}
+
+function valueToString($value): string
+{
+    $isValueComplex = is_array($value) || is_array($value);
+    return $isValueComplex ? 'complex value' : boolToString($value);
 }

@@ -2,7 +2,7 @@
 
 namespace GenDiff\Helpers;
 
-function valueToString($value)
+function boolToString($value)
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';

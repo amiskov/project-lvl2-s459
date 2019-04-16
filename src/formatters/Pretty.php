@@ -4,7 +4,7 @@ namespace GenDiff\Formatters\Pretty;
 
 use function Funct\Strings\times;
 use function Funct\Strings\padLeft;
-use function GenDiff\Helpers\valueToString;
+use function GenDiff\Helpers\boolToString;
 
 const SPACES_IN_INDENT = 4;
 
@@ -46,7 +46,7 @@ function makeRow($item, $depth)
             $innerRows = array_reduce(
                 array_keys($value),
                 function ($rows, $key) use ($signedIndent, $value, $innerIndent) {
-                    return $rows . "{$innerIndent}{$key}: " . valueToString($value[$key]);
+                    return $rows . "{$innerIndent}{$key}: " . boolToString($value[$key]);
                 },
                 ''
             );
@@ -54,7 +54,7 @@ function makeRow($item, $depth)
             return "{$signedIndent}{$key}: {\n{$innerRows}\n{$outerIndent}}";
         }
 
-        return "{$signedIndent}{$key}: " . valueToString($value);
+        return "{$signedIndent}{$key}: " . boolToString($value);
     };
 
     switch ($type) {
