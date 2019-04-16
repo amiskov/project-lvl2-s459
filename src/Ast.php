@@ -31,7 +31,7 @@ function makeNode($key, $dataBefore, $dataAfter)
         return nodeMaker('removed', $key, $valueBefore, $valueAfter);
     }
 
-    if (is_array($valueBefore) && is_array($valueBefore)) {
+    if (is_array($valueBefore) && is_array($valueAfter)) {
         return nodeMaker('nested', $key, '', '', buildAst($valueBefore, $valueAfter));
     }
 
