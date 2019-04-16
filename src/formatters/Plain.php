@@ -25,7 +25,8 @@ function buildDiffBody(array $ast, $parentKeys = [])
 function makeRow(object $astNode, array $parentKeys = []): string
 {
     $type = $astNode->type;
-    $fullKeyPath = getFullKeyPath($parentKeys, $astNode->key);
+    $currentKey = $astNode->key;
+    $fullKeyPath = getFullKeyPath($parentKeys, $currentKey);
     $valueBefore = normalizeValue($astNode->valueBefore);
     $valueAfter = normalizeValue($astNode->valueAfter);
 
@@ -39,8 +40,6 @@ function makeRow(object $astNode, array $parentKeys = []): string
         case 'removed':
             return "Property '{$fullKeyPath}' was removed" . PHP_EOL;
         case 'nested':
-            $currentKey = $astNode->key;
-
             return buildDiffBody(
                 $astNode->children,
                 array_merge($parentKeys, [$currentKey])
