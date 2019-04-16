@@ -28,7 +28,6 @@ function makeDiffRow(object $astNode, array $parentKeys = []): string
     $fullKeyPath = getFullKeyPath($parentKeys, $astNode->key);
     $valueBefore = valueToString($astNode->valueBefore);
     $valueAfter = valueToString($astNode->valueAfter);
-    $childNodes = $astNode->children;
 
     switch ($type) {
         case 'unchanged':
@@ -40,9 +39,11 @@ function makeDiffRow(object $astNode, array $parentKeys = []): string
         case 'removed':
             return "Property '{$fullKeyPath}' was removed" . PHP_EOL;
         case 'nested':
+            $currentKey = $astNode->key;
+
             return buildDiffBody(
-                $childNodes,
-                array_merge($parentKeys, [$fullKeyPath])
+                $astNode->children,
+                array_merge($parentKeys, [$currentKey])
             );
         default:
             throw new \Exception('Unknown type in AST: ' . $type);
