@@ -14,7 +14,7 @@ function buildDiffBody(array $ast, $parentKeys = [])
     $diff = array_reduce(
         $ast,
         function ($diffString, $astNode) use ($parentKeys) {
-            return $diffString . makeDiffRow($astNode, $parentKeys);
+            return $diffString . makeRow($astNode, $parentKeys);
         },
         ''
     );
@@ -22,7 +22,7 @@ function buildDiffBody(array $ast, $parentKeys = [])
     return $diff;
 }
 
-function makeDiffRow(object $astNode, array $parentKeys = []): string
+function makeRow(object $astNode, array $parentKeys = []): string
 {
     $type = $astNode->type;
     $fullKeyPath = getFullKeyPath($parentKeys, $astNode->key);
