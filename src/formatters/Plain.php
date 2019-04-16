@@ -2,7 +2,7 @@
 
 namespace GenDiff\Formatters\Plain;
 
-use function GenDiff\Helpers\boolToString;
+use function GenDiff\Helpers\valueToString;
 
 function buildDiff($ast)
 {
@@ -26,8 +26,8 @@ function makeDiffRow(object $astNode, array $parentKeys = []): string
 {
     $type = $astNode->type;
     $fullKeyPath = getFullKeyPath($parentKeys, $astNode->key);
-    $valueBefore = valueToString($astNode->valueBefore);
-    $valueAfter = valueToString($astNode->valueAfter);
+    $valueBefore = normalizeValue($astNode->valueBefore);
+    $valueAfter = normalizeValue($astNode->valueAfter);
 
     switch ($type) {
         case 'unchanged':
@@ -59,8 +59,8 @@ function getFullKeyPath(array $parents, string $currentKey): string
     return implode('.', $parents) . '.' . $currentKey;
 }
 
-function valueToString($value): string
+function normalizeValue($value): string
 {
     $isValueComplex = is_array($value) || is_array($value);
-    return $isValueComplex ? 'complex value' : boolToString($value);
+    return $isValueComplex ? 'complex value' : valueToString($value);
 }
